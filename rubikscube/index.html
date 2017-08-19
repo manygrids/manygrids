@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    <!-- 
+    Smart developers always View Source. 
+    
+    This application was built using Adobe Flex, an open source framework
+    for building rich Internet applications that get delivered via the
+    Flash Player or to desktops via Adobe AIR. 
+    
+    Learn more about Flex at http://flex.org 
+    // -->
+    <head>
+        <title></title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
+             the body element to 100%, because Firefox, or any Gecko based browser, interprets percentage as 
+             the percentage of the height of its parent container, which has to be set explicitly.  Fix for
+             Firefox 3.6 focus border issues.  Initially, don't display flashContent div so it won't show 
+             if JavaScript disabled.
+        -->
+        <style type="text/css" media="screen"> 
+            html, body  { height:100%; }
+            body { margin:0; padding:0; overflow:auto; text-align:center; 
+                   background-color: #ffffff; }   
+            object:focus { outline:none; }
+            #flashContent { display:none;}
+        </style>
+	<style type="text/css">
+          a {color: #66AAFF; text-decoration: none;}
+          a:hover {color: #AADDFF; text-decoration: underline;}
+        </style>
+        
+        <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
+        <!-- BEGIN Browser History required section -->
+        <link rel="stylesheet" type="text/css" href="history/history.css" />
+        <script type="text/javascript" src="history/history.js"></script>
+        <!-- END Browser History required section -->  
+            
+        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript">
+            // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+            var swfVersionStr = "11.1.0";
+            // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {};
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "#ffffff";
+            params.allowscriptaccess = "sameDomain";
+            params.allowfullscreen = "true";
+            params.wmode = 'direct';
+            var attributes = {};
+            attributes.id = "RubiksCube";
+            attributes.name = "RubiksCube";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+                "RubiksCube.swf", "flashContent", 
+                "100%", "100%", 
+                swfVersionStr, xiSwfUrlStr, 
+                flashvars, params, attributes);
+            // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+            
+            function onFinish() {
+                alert('复原完成');
+            }
+
+            function onMainMenu() {
+
+            }
+            
+            function onPauseToMainMenu() {
+                xxx = false;
+            }
+            
+            function onSolveStart() {
+                alert(0);
+            }
+            //onViewMode
+            //onGameStart
+            //onSolveStart
+            
+            function saveCube() {
+            //alert(1);
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    document.getElementById("cube_data").value = (obj.getCubeData());
+                }
+                
+            }
+            
+            function loadCube() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.setCubeData(document.getElementById("cube_data").value);
+                    document.getElementById("op_bar").style.display = 'none';
+                }
+            }
+            
+            function getOperate() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    document.getElementById("op_data").value = (obj.getOperateStr());
+                }
+            }
+            function setOperate() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.setOperateStr(document.getElementById("op_data").value);
+                    document.getElementById("pb").disabled = '';
+                    document.getElementById("nb").disabled = '';
+                    if (obj.isOperateBegin()) {
+                        document.getElementById("pb").disabled = 'disabled';
+                    }
+                    if (obj.isOperateEnd()) {
+                        document.getElementById("nb").disabled = 'disabled';
+                    }
+                    document.getElementById("op_bar").style.display = 'block';
+
+                }
+            }
+
+            function prevOperate() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    if (obj.isAnimating()) return;
+                    obj.operatePrev();
+                    obj.operateWithAnimation(10);
+                    if (obj.isOperateBegin()) {
+                        document.getElementById("pb").disabled = 'disabled';
+                    }
+                    document.getElementById("nb").disabled = '';
+                }
+            }
+            function nextOperate() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    if (obj.isAnimating()) return;
+                    obj.operateNext();
+                    obj.operateWithAnimation(10);
+                    if (obj.isOperateEnd()) {
+                        document.getElementById("nb").disabled = 'disabled';
+                    }
+                    document.getElementById("pb").disabled = '';
+                }
+            }
+            
+            function shiftToView() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.shiftToViewMode();
+                    document.getElementById("pb").disabled = 'disabled';
+                    document.getElementById("nb").disabled = '';
+                }
+            }
+
+            function shiftToSolve() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.shiftToSolveMode();
+                }
+            }
+            
+            function shiftToCustom() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.shiftToCustomMode();
+                }
+            }
+
+            function setOrders() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.setOrders(parseInt(document.getElementById("cubex").value),
+                    parseInt(document.getElementById("cubey").value),
+                    parseInt(document.getElementById("cubez").value));
+                    document.getElementById("op_bar").style.display = 'none';
+                }
+            }
+
+            function quickSetOrders(order) {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.setOrders(order, order, order);
+                    document.getElementById("op_bar").style.display = 'none';
+                }
+            }
+
+            function randomCube() {
+                var obj = document.getElementById("RubiksCube");
+                if (obj) {
+                    obj.randomCube(20);
+                }
+            }
+
+        </script>
+        <script src="http://mat1.gtimg.com/app/openjs/openjs.js#autoboot=no&debug=no"></script>
+    </head>
+    <body>
+        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
+             JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
+             when JavaScript is disabled.
+        -->
+        <div style="width: 1024px; margin: auto;">
+          <div style="margin: 5px 0px; text-align: left; border-bottom: 1px solid black; font: 30px bold; height: 38px;"><span style="margin: 2px 0px; float: left;">在线虚拟魔方</span>
+            <div style="float: left; margin: 5px 20px;">
+              <div id="qqwb_share__" title="转播到腾讯微博" data-appkey="801392219" data-icon="1" data-counter="0" data-counter_pos="right" data-content="来这里http://ylab.me/rubikscube/和我一起玩魔方吧，不会玩可以向我求助哦。/偷笑"></div>
+            </div>
+            <div style="float: left; margin: 5px 0px;">
+
+<script type="text/javascript" charset="utf-8">
+(function(){
+  var _w = 106 , _h = 28;
+  var param = {
+    url:location.href,
+    type:'5',
+    count:'0', /**是否显示分享数，1显示(可选)*/
+    appkey:'1426311590', /**您申请的应用appkey,显示分享来源(可选)*/
+    title:'来这里http://ylab.me/rubikscube/和我一起玩魔方吧，不会玩可以向我求助哦。[偷笑]', /**分享的文字内容(可选，默认为所在页面的title)*/
+    pic:'', /**分享图片的路径(可选)*/
+    ralateUid:'', /**关联用户的UID，分享微博会@该用户(可选)*/
+    language:'zh_cn', /**设置语言，zh_cn|zh_tw(可选)*/
+    dpc:1
+  }
+  var temp = [];
+  for( var p in param ){
+    temp.push(p + '=' + encodeURIComponent( param[p] || '' ) )
+  }
+  document.write('<iframe id="sina_weibo" allowTransparency="true" frameborder="0" scrolling="no" src="http://service.weibo.com/staticjs/weiboshare.html?' + temp.join('&') + '" width="'+ _w+'" height="'+_h+'"></iframe>')
+})()
+</script>
+</div>
+            <div style="float: right; font-size: 20px;"><a href="rubikscube.zip">下载</a></div>
+          </div>
+          <div style="clear: both;"></div>
+          <p>
+            快速设置：
+            <input type="button" onClick="quickSetOrders(2)" value="二阶" />
+            <input type="button" onClick="quickSetOrders(3)" value="三阶" />
+            <input type="button" onClick="quickSetOrders(4)" value="四阶" />
+            <input type="button" onClick="quickSetOrders(5)" value="五阶" />
+            <input type="button" onClick="quickSetOrders(6)" value="六阶" />
+          </p>
+          <p>
+            长<input value="3" id="cubex" style="width: 20px;" />
+            宽<input value="3" id="cubez" style="width: 20px;" />
+            高<input value="3" id="cubey" style="width: 20px;" />
+            <input type="button" onClick="setOrders()" value="设置阶数" id="so" />
+          </p>
+          <p>
+            <input type="button" onClick="randomCube()" value="随机打乱20次" id="rc" />
+          </p>
+        <div style="width: 512px; height: 512px; margin: auto;">
+        <div id="flashContent">
+            <p>
+                To view this page ensure that Adobe Flash Player version 
+                11.1.0 or greater is installed. 
+            </p>
+            <script type="text/javascript"> 
+                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
+                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
+                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
+            </script> 
+        </div>
+        </div>
+        
+        <noscript>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="RubiksCube">
+                <param name="movie" value="RubiksCube.swf" />
+                <param name="quality" value="high" />
+                <param name="bgcolor" value="#ffffff" />
+                <param name="allowScriptAccess" value="sameDomain" />
+                <param name="allowFullScreen" value="true" />
+                <!--[if !IE]>-->
+                <object type="application/x-shockwave-flash" data="RubiksCube.swf" width="100%" height="100%">
+                    <param name="quality" value="high" />
+                    <param name="bgcolor" value="#ffffff" />
+                    <param name="allowScriptAccess" value="sameDomain" />
+                    <param name="allowFullScreen" value="true" />
+                <!--<![endif]-->
+                <!--[if gte IE 6]>-->
+                    <p> 
+                        Either scripts and active content are not permitted to run or Adobe Flash Player version
+                        11.1.0 or greater is not installed.
+                    </p>
+                <!--<![endif]-->
+                    <a href="http://www.adobe.com/go/getflashplayer">
+                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
+                    </a>
+                <!--[if !IE]>-->
+                </object>
+                <!--<![endif]-->
+            </object>
+        </noscript>
+            <div id="op_bar" style="display: none; margin-top: 5px;">
+              <input type="button" onClick="prevOperate()" value="<后退一步" id="pb" />
+              <input type="button" onClick="nextOperate()" value="前进一步>" id="nb" />
+            </div>
+        <div style="border-top: 1px solid black; margin-top: 10px; padding-top: 10px;">
+            <div style="float: left; margin: 0px 10px; margin-left: 140px;">
+              <br /><input type="button" onClick="saveCube()" value="保存魔方到>" /><br /><br />
+              <input type="button" onClick="loadCube()" value="载入魔方自<" />
+            </div>
+            <textarea id="cube_data" style="height: 100px; float: left;"></textarea>
+            <div style="float: left; margin: 0px 10px; margin-left: 40px; border-left: 1px solid black; padding-left: 20px; height: 100px;">
+              <br /><input type="button" onClick="getOperate()" value="保存操作到>" /><br /><br />
+              <input type="button" onClick="setOperate()" value="载入操作自<" />
+            </div>
+            <textarea id="op_data" style="height: 100px; float: left;"></textarea>
+        </div>
+              <!--input type="button" onClick="shiftToView()" value="view operate" /-->
+   </body>
+</html>

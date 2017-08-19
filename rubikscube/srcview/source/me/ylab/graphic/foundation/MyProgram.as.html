@@ -1,0 +1,114 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>MyProgram.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">me</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ylab</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">graphic</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">foundation</span> <span class="ActionScriptBracket/Brace">{</span>
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">adobe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AGALMiniAssembler</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">display3D</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Context3DProgramType</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">display3D</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Program3D</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sensors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Accelerometer</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">MyProgram</span> <span class="ActionScriptBracket/Brace">{</span>
+
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mGraphic</span>:<span class="ActionScriptDefault_Text">Graphic3D</span>;
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mVertexIndicesWithCubeTextureProgram</span>:<span class="ActionScriptDefault_Text">Program3D</span>;
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mTexturedVertexIndicesProgram</span>:<span class="ActionScriptDefault_Text">Program3D</span>;
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mColoredVertexIndicesProgram</span>:<span class="ActionScriptDefault_Text">Program3D</span>;
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mVertexIndicesProgram</span>:<span class="ActionScriptDefault_Text">Program3D</span>;
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">MyProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">graphic</span>:<span class="ActionScriptDefault_Text">Graphic3D</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">mGraphic</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">graphic</span>;
+            
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">vertexShaderAssembler</span> : <span class="ActionScriptDefault_Text">AGALMiniAssembler</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AGALMiniAssembler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span> : <span class="ActionScriptDefault_Text">AGALMiniAssembler</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AGALMiniAssembler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptComment">// mVertexIndicesProgram
+</span>            <span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">VERTEX</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"m44 vt0, va0, vc4\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// pos to clipspace
+</span>                <span class="ActionScriptString">"m44 op, vt0, vc0\n"</span> <span class="ActionScriptComment">// pos to clipspace
+</span>            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FRAGMENT</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"mov oc, fc0\n"</span>
+            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptDefault_Text">mVertexIndicesProgram</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">mGraphic</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">context</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">mVertexIndicesProgram</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">upload</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptComment">// mColoredVertexIndicesProgram
+</span>            <span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">VERTEX</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"m44 op, va0, vc0\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// pos to clipspace
+</span>                <span class="ActionScriptString">"mov v0, va1\n"</span><span class="ActionScriptComment">// copy color
+</span>            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FRAGMENT</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"mov oc, v0"</span>
+            <span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">mColoredVertexIndicesProgram</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">mGraphic</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">context</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">mColoredVertexIndicesProgram</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">upload</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptComment">// mTexturedVertexIndicesProgram
+</span>            <span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">VERTEX</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"m44 op, va0, vc0\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// pos to clipspace
+</span>                <span class="ActionScriptString">"mov v0, va1\n"</span><span class="ActionScriptComment">// copy texture coordinate
+</span>            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FRAGMENT</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"tex ft0, v0, fs0&lt;2d&gt;\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// get color from texture
+</span>                <span class="ActionScriptString">"mov oc, ft0"</span>
+            <span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">mTexturedVertexIndicesProgram</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">mGraphic</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">context</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">mTexturedVertexIndicesProgram</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">upload</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptComment">// mVertexIndicesWithCubeTextureProgram
+</span>            <span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">VERTEX</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"m44 op, va0, vc0\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// pos to clipspace
+</span>                <span class="ActionScriptString">"m44 vt0, va0, vc4\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// pos to clipspace
+</span>                <span class="ActionScriptString">"mov vt4, vc8\n"</span> <span class="ActionScriptOperator">+</span>
+                <span class="ActionScriptString">"nrm vt4.xyz, vt4.xyz\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// normal to clipspace
+</span>                <span class="ActionScriptString">"sub vt1, vt0, vc9\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// get eye ray
+</span>                <span class="ActionScriptString">"dp3 vt2, vt1, vt4\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// 
+</span>                <span class="ActionScriptString">"add vt3, vt2, vt2\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// 
+</span>                <span class="ActionScriptString">"mul vt2, vt3.x, vt4\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// 
+</span>                <span class="ActionScriptString">"sub vt5, vt1, vt2\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// get reflect ray
+</span>                <span class="ActionScriptString">"mov v0, vt5"</span>
+            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assemble</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">Context3DProgramType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FRAGMENT</span><span class="ActionScriptOperator">,</span>
+                <span class="ActionScriptString">"tex ft0, v0, fs0&lt;cube,linear,nomip,clamp&gt;\n"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptComment">// get color from texture
+</span>                <span class="ActionScriptString">"mul ft1, fc0, ft0\n"</span> <span class="ActionScriptOperator">+</span> 
+                <span class="ActionScriptString">"add oc, fc1, ft1"</span> <span class="ActionScriptComment">// add color and texture
+</span>            <span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">mVertexIndicesWithCubeTextureProgram</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">mGraphic</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">context</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">mVertexIndicesWithCubeTextureProgram</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">upload</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">vertexShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">fragmentShaderAssembler</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">agalcode</span><span class="ActionScriptBracket/Brace">)</span>;
+
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">vertexIndicesProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Program3D</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">mVertexIndicesProgram</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">coloredVertexIndicesProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Program3D</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">mColoredVertexIndicesProgram</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">texturedVertexIndicesProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Program3D</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">mTexturedVertexIndicesProgram</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">vertexIndicesWithCubeTextureProgram</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Program3D</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">mVertexIndicesWithCubeTextureProgram</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

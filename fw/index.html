@@ -1,0 +1,623 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=.5, maximum-scale=5, user-scalable=no">
+<title></title>
+<style>
+html, body { width: 100%; height: 100%; margin: 0px; padding: 0px; overflow: hidden; }
+body { background-color: #000; }
+canvas { margin: 0px; padding: 0px; }
+</style>
+<!--
+<script src="js/debug_console.js"></script>
+-->
+</head>
+<body>
+<a id="CreateLink" href="config.html" style="position: absolute; top: 0px; left: 0px;">My Wish</a>
+<script>
+
+  var searchArray = location.search.substring(1).split('&');
+  var queryParams = {};
+  for (var i = 0; i < searchArray.length; i++) {
+    var kv = searchArray[i].split('=');
+    queryParams[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
+  }
+  
+  if ('1' == queryParams['nl']) {
+    document.getElementById('CreateLink').style.display = 'none';
+  }
+  
+  var showWords = [];
+
+  function extend(base, ext) {
+    if (!base || !ext) return;
+    
+    for (var i in ext) {
+      base[i] = ext[i];
+    }
+  }
+
+  function color4(r, g, b, a) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+  }
+  
+  function point(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  function particle(param) {
+    var p = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      ax: 0,
+      ay: 0,
+      frictionfactor: 0,
+      color: new color4(0, 0, 0, 1),
+      colorFunction: function () { return this.color; },
+      size: 1,
+      life: 0,
+      rebornable: false,
+      whenDie: function () {}
+    };
+    
+    extend(p, param);
+    
+    this.pos = new point(p.x, p.y);
+    this.v = new point(p.vx, p.vy);
+    this.a = new point(p.ax, p.ay);
+    this.frictionfactor = p.frictionfactor;
+    this.color = p.color;
+    this.currentColor = p.colorFunction;
+    this.size = p.size;
+    this.life = p.life;
+    this.initLife = p.life;
+    this.rebornable = p.rebornable;
+    this.whenDie = p.whenDie;
+  }
+  
+  particle.copy = function (another) {
+    if (another instanceof particle) {
+      return new particle({
+        x: another.pos.x,
+        y: another.pos.y,
+        vx: another.v.x,
+        vy: another.v.y,
+        ax: another.a.x,
+        ay: another.a.y,
+        frictionfactor: another.frictionfactor,
+        life: another.life,
+        color: another.color,
+        currentColor: another.currentColor,
+        size: another.size,
+        rebornable: another.rebornable,
+        whenDie: another.whenDie
+      });
+    }
+  };
+  
+  particle.prototype.reborn = function (particle) {
+    this.pos.x = particle.pos.x;
+    this.pos.y = particle.pos.y;
+    this.v.x = particle.v.x;
+    this.v.y = particle.v.y;
+    this.a.x = particle.a.x;
+    this.a.y = particle.a.y;
+    this.frictionfactor = particle.frictionfactor;
+    this.color = particle.color;
+    this.currentColor = particle.currentColor;
+    this.life = particle.life;
+    this.initLife = this.life;
+    this.size = this.size;
+    this.rebornable = particle.rebornable;
+    this.whenDie = particle.whenDie;
+  };
+  
+  particle.prototype.loop = function (t) {
+    if (this.life > 0) {
+      this.pos.x += this.v.x * t + this.a.x * t * t * 0.5;
+      this.pos.y += this.v.y * t + this.a.y * t * t * 0.5;
+      this.v.x += this.a.x * t;
+      this.v.y += this.a.y * t;
+      this.v.x -= this.v.x * this.frictionfactor;
+      this.v.y -= this.v.y * this.frictionfactor;
+      
+      this.life -= t;
+    }
+  };
+  
+  function ParticleSystem(param) {
+    var p = {
+      maxCount: 100,
+      initParticle: function () { return new particle(); },
+      whenAllDied: function () {}
+    };
+    
+    extend(p, param);
+    
+    this.param = p;
+    
+    this.liveCount = 0;
+    
+    this.particles = [];
+  }
+
+  ParticleSystem.prototype.init = function (count) {
+    var ps = this.particles;
+    
+    var _this = this;
+    
+    for (var i = 0; i < count; i++) {
+      var p = this.param.initParticle(i);
+      p.whenDie = function () {
+        _this.liveCount--;
+        if (0 == _this.liveCount) {
+          _this.param.whenAllDied();
+        }
+      };
+      
+      ps.push(p);
+      
+      if (p.life > 0) {
+        _this.liveCount++;
+      }
+    }
+  };
+  
+  ParticleSystem.prototype.loop = function (t) {
+    var ps = this.particles;
+    var pCount = ps.length;
+    for (var i = 0; i < pCount; i++) {
+      var p = ps[i];
+      p.loop(t);
+      if (p.life <= 0) {
+        if (p.rebornable) {
+          p.reborn(this.param.initParticle());
+        } else {
+          p.whenDie();
+        }
+      }
+    }
+  };
+  
+  
+  function randomIn(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  
+  function intRandomIn(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  
+  
+  function fireworks(param) {
+    
+    var target = param.target;
+    var _this = this;
+    
+    this.state = fireworks.LAUNCH;
+    this.customPoints = {data: []};
+    
+    var p = {
+    };
+
+    extend(p, param);
+    
+    if (p.custom) {
+      if ('object' == typeof p.custom && p.custom.img.length > 0) {
+      
+        var img = new Image();
+        img.onload = function () {
+          
+          _this.customPoints.width = img.width;
+          _this.customPoints.height = img.height;
+        
+          var canvasWidth = _this.customPoints.width;
+          var canvasHeight = _this.customPoints.height;
+          
+          var imgCanvas = document.createElement('canvas');
+          imgCanvas.width = canvasWidth;
+          imgCanvas.height = canvasHeight;
+          
+          var imgCtx = imgCanvas.getContext('2d');
+          
+          imgCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+          imgCtx.drawImage(img, 0, 0);
+          
+          var pixelData = imgCtx.getImageData(0, 0, canvasWidth, canvasHeight).data;
+          
+          for (var i = 0; i < pixelData.length; i += 4) {
+            if (pixelData[i + 3] > 5) {
+              var dx = (i / 4) % canvasWidth;
+              var dy = Math.floor((i / 4) / canvasWidth);
+              _this.customPoints.data.push(new point(dx, dy));
+            }
+          }
+        };
+        img.onerror = function () {
+          // _this.ps.param.whenAllDied();
+        }
+        
+        img.src = p.custom.img;
+      
+      } else if ('string' == typeof p.custom && p.custom.length > 0) {
+      
+        this.customPoints.width = 16 * p.custom.length;
+        this.customPoints.height = 20;
+      
+        p.custom = p.custom.slice(0, Math.min(p.custom.length, 8));
+        
+        var canvasWidth = this.customPoints.width;
+        var canvasHeight = this.customPoints.height;
+        
+        var strCanvas = document.createElement('canvas');
+        strCanvas.width = canvasWidth;
+        strCanvas.height = canvasHeight;
+        
+        var strCtx = strCanvas.getContext('2d');
+        
+        strCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+        strCtx.fillStyle = "#000";
+        strCtx.textBaseline = 'top';
+        strCtx.font = '16px simhei';
+        strCtx.fillText(p.custom, 0, 0);
+        
+        var pixelData = strCtx.getImageData(0, 0, canvasWidth, canvasHeight).data;
+        
+        for (var i = 0; i < pixelData.length; i += 4) {
+          if (pixelData[i + 3] > 5) {
+            var dx = (i / 4) % canvasWidth;
+            var dy = Math.floor((i / 4) / canvasWidth);
+            this.customPoints.data.push(new point(dx, dy));
+          }
+        }
+      }
+    }
+    
+    
+    this.ps = new ParticleSystem({
+      initParticle: function (i) {
+        var life = randomIn(1500, 3500) / 1000;
+        
+        if (_this.customPoints.data.length > 0) {
+          life = 2;
+        }
+        
+        var vx = randomIn(-100, 100) / 10,
+        ay = 0,
+        s = param.bottom - target.y,
+        vy = -(s - ay / 2 * life * life) / life;
+        
+        //console.log(vy);
+        
+        return new particle({
+          x: target.x - vx * life,
+          y: param.bottom,
+          vx: vx,
+          vy: vy,
+          ax: 0,
+          ay: ay,
+          color: new color4(200, 200, 200, 1),
+          life: life,
+          rebornable: false
+        });
+      },
+      whenAllDied: function () {
+        _this.state = fireworks.EXPLOSION;
+        var theme = new color4(intRandomIn(100, 255), intRandomIn(100, 255), intRandomIn(100, 255), 1);
+          
+        if (_this.customPoints.data.length > 0) {
+        
+          var minPoint = new point(_this.customPoints.width, _this.customPoints.height);
+          var maxPoint = new point(0, 0);
+          for (var ii = 0; ii < _this.customPoints.data.length; ii++) {
+            var sp = _this.customPoints.data[ii];
+            if (sp.x < minPoint.x) {
+              minPoint.x = sp.x;
+            }
+            if (sp.y < minPoint.y) {
+              minPoint.y = sp.y;
+            }
+            if (sp.x > maxPoint.x) {
+              maxPoint.x = sp.x;
+            }
+            if (sp.y > maxPoint.y) {
+              maxPoint.y = sp.y;
+            }
+          }
+          
+          var middlePoint = new point((maxPoint.x - minPoint.x) / 2, (maxPoint.y - minPoint.y) / 2);
+          
+          //console.log('_this.customPoints.length: ' + _this.customPoints.length);
+          
+          _this.ps = new ParticleSystem({
+            initParticle: function (i) {
+              var data = _this.customPoints.data;
+              var vx = (data[i].x - middlePoint.x) / 1.8 * 25;
+              var vy = (data[i].y - middlePoint.y) / 1.8 * 25;
+          
+              // console.log(data[i].x + ', ' + data[i].y);
+              // console.log(vx + ', ' + vy);
+          
+              return new particle({
+                x: target.x,
+                y: target.y,
+                vx: vx,
+                vy: vy,
+                ax: 0,
+                ay: 30,
+                frictionfactor: 0.2,
+                color: theme,
+                colorFunction: function () {
+                  // make it blink
+                  if (randomIn(0, 1000) > 800) {
+                    return new color4(this.color.r * 3, this.color.g * 3, this.color.b * 3, (this.life / this.initLife) * 3);
+                  }
+                  return new color4(this.color.r, this.color.g, this.color.b, (this.life / this.initLife));
+                },
+                size: 1,
+                life: 1.8,
+                rebornable: false
+              });
+            },
+            whenAllDied: function () {
+              fireworksArray.remove(_this);
+              if (kwIndex == showWords.length) {
+                if (queryParams['rep'] != 1) {
+                  while (fireworksArray.length < fireworksCount) {
+                    fireworksArray.push(new fireworks({
+                      winSize: param.winSize,
+                      bottom: param.winSize.height,
+                      target: {x: randomIn(param.winSize.width * 0.2, param.winSize.width * 0.8), y: randomIn(param.winSize.height * 0.1, param.winSize.height * 0.5)}
+                    }));
+                  }
+                }
+              }
+            }
+          });
+
+          _this.ps.init(_this.customPoints.data.length);
+        } else {
+          
+          _this.ps = new ParticleSystem({
+            initParticle: function (i) {
+              var vx = randomIn(-20, 20) * randomIn(-15, 15);
+              var vy = randomIn(-20, 20) * randomIn(-15, 15);
+          
+              return new particle({
+                x: target.x,
+                y: target.y,
+                vx: vx,
+                vy: vy,
+                ax: 0,
+                ay: 40,
+                frictionfactor: 0.08,
+                color: theme,
+                colorFunction: function () {
+                  // make it blink
+                  if (randomIn(0, 1000) > 800) {
+                    return new color4(this.color.r * 3, this.color.g * 3, this.color.b * 3, (this.life / this.initLife) * 3);
+                  }
+                  return new color4(this.color.r, this.color.g, this.color.b, (this.life / this.initLife));
+                },
+                life: 1.8,
+                rebornable: false
+              });
+            },
+            whenAllDied: function () {
+              fireworksArray.remove(_this);
+              fireworksArray.push(new fireworks({
+                winSize: param.winSize,
+                bottom: param.winSize.height,
+                target: {x: randomIn(param.winSize.width * 0.2, param.winSize.width * 0.8), y: randomIn(param.winSize.height * 0.1, param.winSize.height * 0.5)}
+              }));
+            }
+          });
+
+          _this.ps.init(100);
+        }
+        
+      }
+    });
+    
+    this.ps.init(1);
+  }
+  
+  fireworks.LAUNCH = 0;
+  fireworks.EXPLOSION = 1;
+  
+  fireworks.prototype.loop = function (t) {
+    this.ps.loop(t);
+  };
+
+  var fireworksArray = [];
+  var kwIndex = 0;
+    
+  window.onload = function () {
+    var winSize = {
+      width: document.body.clientWidth,
+      height: document.body.clientHeight
+    };
+    
+  
+    var canvas = document.createElement('canvas');
+    canvas.width = winSize.width;
+    canvas.height = winSize.height;
+    canvas.style.width = winSize.width + 'px';
+    canvas.style.height = winSize.height + 'px';
+    
+    document.body.appendChild(canvas);
+    
+    var ctx = canvas.getContext('2d');
+    
+    
+    
+    var lastTime = -1;
+    
+    function render() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, winSize.width, winSize.height);
+      // ctx.clearRect(0, 0, winSize.width, winSize.height);
+      
+      for (var i = 0; i < fireworksArray.length; i++) {
+        var particles = fireworksArray[i].ps.particles;
+        var pCount = particles.length;
+        
+        for (var j = 0; j < pCount; j++) {
+          var color = particles[j].currentColor();
+          ctx.fillStyle = 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';
+          // ctx.fillStyle = 'rgba(255, ' + ( Math.floor(particles[j].life / particles[j].initLife * 200)) + ', 0, ' + (particles[j].life / particles[j].initLife) + ')';
+          ctx.beginPath();
+          ctx.arc(particles[j].pos.x, particles[j].pos.y, particles[j].size, 0, 360);
+          ctx.closePath();
+          
+          ctx.fill();
+        }
+      }
+    }
+    
+    Array.prototype.remove = function (elem) {
+      for (var i = 0; i < this.length; i++) {
+        if (this[i] === elem) {
+          this.splice(i, 1);
+          return;
+        }
+      }
+    };
+    
+    
+    window.fireworksCount = 3;
+    
+    function wordSplit(str) {
+      var ret = [];
+      var word = [];
+      
+      var imgReg = new RegExp(/{{([^(}})]*)}}/g);
+      
+      for (var i = 0; i < str.length; i++) {
+        var _char = str.charAt(i);
+        
+        if ('{' == _char && '{' == str.charAt(i + 1)) {
+          // imgReg.lastIndex = i;
+          var imgPath = imgReg.exec(str);
+          if (imgPath.length > 0) {
+            if (word.length > 0) {
+              ret.push(word.join(''));
+              word = [];
+            }
+            ret.push({
+              img: imgPath[1]
+            });
+            i += imgPath[0].length - 1;
+            continue;
+          } else {
+            word.push(_char);
+          }
+        }
+        
+        if (/[\s\t,]/.test(_char)) {
+          if (word.length > 0) {
+            ret.push(word.join(''));
+            word = [];
+          }
+        } else if (str.charCodeAt(i) > 127) {
+          if (word.length > 0) {
+            ret.push(word.join(''));
+            word = [_char];
+          } else {
+            word.push(_char);
+          }
+        } else {
+          word.push(_char);
+        }
+      }
+      
+      if (word.length > 0) {
+        ret.push(word.join(''));
+      }
+
+      return ret;
+    }
+    
+    if (queryParams['kw'] && queryParams['kw'].length > 0) {
+      showWords = wordSplit(queryParams['kw']);
+      
+      if (showWords.length > 0) {
+        kwIndex = 0;
+        fireworksArray.push(new fireworks({
+          winSize: winSize,
+          bottom: winSize.height,
+          target: {x: randomIn(winSize.width * 0.3, winSize.width * 0.7), y: randomIn(winSize.height * 0.1, winSize.height * 0.5)},
+          custom: showWords[kwIndex++]
+        }));
+        
+        var delayHandler = setInterval(function () {
+          if (showWords.length > 0 && kwIndex < showWords.length) {
+            var ss = showWords[kwIndex++];
+            
+            if ('object' == typeof ss) {
+              var img = new Image();
+              img.onload = function () {
+                fireworksArray.push(new fireworks({
+                  winSize: winSize,
+                  bottom: winSize.height,
+                  target: {x: randomIn(winSize.width * 0.3, winSize.width * 0.7), y: randomIn(winSize.height * 0.1, winSize.height * 0.5)},
+                  custom: ss
+                }));
+              };
+              img.src = ss.img;
+            } else {
+              fireworksArray.push(new fireworks({
+                winSize: winSize,
+                bottom: winSize.height,
+                target: {x: randomIn(winSize.width * 0.3, winSize.width * 0.7), y: randomIn(winSize.height * 0.1, winSize.height * 0.5)},
+                custom: ss
+              }));
+            }
+            
+            
+          } else {
+            if (1 == queryParams['rep']) {
+              kwIndex = 0;
+            } else {
+              clearInterval(delayHandler);
+            }
+          }
+        }, 1000);
+      }
+    } else {
+      for (var c = 0; c < fireworksCount; c++) {
+        fireworksArray.push(new fireworks({
+          winSize: winSize,
+          bottom: winSize.height,
+          target: {x: randomIn(winSize.width * 0.2, winSize.width * 0.8), y: randomIn(winSize.height * 0.1, winSize.height * 0.5)}
+        }));
+      }
+    }
+    
+    function loop(elapse) {
+      if (lastTime < 0) {
+      } else {
+        for (var i = 0; i < fireworksArray.length; i++) {
+          fireworksArray[i].loop((elapse - lastTime) / 1000);
+        }
+        render();
+      }
+    
+      lastTime = elapse;
+      requestAnimationFrame(loop);
+    }
+    
+    requestAnimationFrame(loop);
+    
+    
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>rubiks_cube 的源代码</title>
+	<nodes>
+		<node label="src">
+			<node icon="packageIcon" label="com.adobe.utils" expanded="true">
+				<node icon="actionScriptIcon" label="AGALMiniAssembler.as" url="source/com/adobe/utils/AGALMiniAssembler.as.html"/>
+				<node icon="actionScriptIcon" label="FractalGeometryGenerator.as" url="source/com/adobe/utils/FractalGeometryGenerator.as.html"/>
+				<node icon="actionScriptIcon" label="PerspectiveMatrix3D.as" url="source/com/adobe/utils/PerspectiveMatrix3D.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.application" expanded="true">
+				<node icon="actionScriptIcon" label="IResource.as" url="source/me/ylab/application/IResource.as.html"/>
+				<node icon="actionScriptIcon" label="IRunable.as" url="source/me/ylab/application/IRunable.as.html"/>
+				<node icon="actionScriptIcon" label="IScene.as" url="source/me/ylab/application/IScene.as.html"/>
+				<node icon="actionScriptIcon" label="MyAnimation.as" url="source/me/ylab/application/MyAnimation.as.html"/>
+				<node icon="actionScriptIcon" label="MyAnimationManager.as" url="source/me/ylab/application/MyAnimationManager.as.html"/>
+				<node icon="actionScriptIcon" label="MyAppCommonRunner.as" url="source/me/ylab/application/MyAppCommonRunner.as.html"/>
+				<node icon="actionScriptIcon" label="MyAppEmptyRunner.as" url="source/me/ylab/application/MyAppEmptyRunner.as.html"/>
+				<node icon="actionScriptIcon" label="MyApplication.as" url="source/me/ylab/application/MyApplication.as.html"/>
+				<node icon="actionScriptIcon" label="MyAppPauseRunner.as" url="source/me/ylab/application/MyAppPauseRunner.as.html"/>
+				<node icon="actionScriptIcon" label="MyLogic.as" url="source/me/ylab/application/MyLogic.as.html"/>
+				<node icon="actionScriptIcon" label="MyResource.as" url="source/me/ylab/application/MyResource.as.html"/>
+				<node icon="actionScriptIcon" label="MyResourceLoader.as" url="source/me/ylab/application/MyResourceLoader.as.html"/>
+				<node icon="actionScriptIcon" label="MyScene.as" url="source/me/ylab/application/MyScene.as.html"/>
+				<node icon="actionScriptIcon" label="MyTimer.as" url="source/me/ylab/application/MyTimer.as.html"/>
+				<node icon="actionScriptIcon" label="MyTimerAnimation.as" url="source/me/ylab/application/MyTimerAnimation.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.component" expanded="true">
+				<node icon="actionScriptIcon" label="CompCube.as" url="source/me/ylab/graphic/component/CompCube.as.html"/>
+				<node icon="actionScriptIcon" label="CompRectangle.as" url="source/me/ylab/graphic/component/CompRectangle.as.html"/>
+				<node icon="actionScriptIcon" label="CompTriangle.as" url="source/me/ylab/graphic/component/CompTriangle.as.html"/>
+				<node icon="actionScriptIcon" label="MyTextTexture.as" url="source/me/ylab/graphic/component/MyTextTexture.as.html"/>
+				<node icon="actionScriptIcon" label="SkyBox.as" url="source/me/ylab/graphic/component/SkyBox.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.foundation" expanded="true">
+				<node icon="actionScriptIcon" label="CrossTestResult.as" url="source/me/ylab/graphic/foundation/CrossTestResult.as.html"/>
+				<node icon="actionScriptIcon" label="EmptyDraw.as" url="source/me/ylab/graphic/foundation/EmptyDraw.as.html"/>
+				<node icon="actionScriptIcon" label="Graphic3D.as" url="source/me/ylab/graphic/foundation/Graphic3D.as.html"/>
+				<node icon="actionScriptIcon" label="IDrawable.as" url="source/me/ylab/graphic/foundation/IDrawable.as.html"/>
+				<node icon="actionScriptIcon" label="ISelectable.as" url="source/me/ylab/graphic/foundation/ISelectable.as.html"/>
+				<node icon="actionScriptIcon" label="MyCamera3D.as" url="source/me/ylab/graphic/foundation/MyCamera3D.as.html"/>
+				<node icon="actionScriptIcon" label="MyColor4f.as" url="source/me/ylab/graphic/foundation/MyColor4f.as.html"/>
+				<node icon="actionScriptIcon" label="MyCubeTexture.as" url="source/me/ylab/graphic/foundation/MyCubeTexture.as.html"/>
+				<node icon="actionScriptIcon" label="MyDrawBatch.as" url="source/me/ylab/graphic/foundation/MyDrawBatch.as.html"/>
+				<node icon="actionScriptIcon" label="MyDrawBatchPackage.as" url="source/me/ylab/graphic/foundation/MyDrawBatchPackage.as.html"/>
+				<node icon="actionScriptIcon" label="MyIndexBuffer.as" url="source/me/ylab/graphic/foundation/MyIndexBuffer.as.html"/>
+				<node icon="actionScriptIcon" label="MyMesh.as" url="source/me/ylab/graphic/foundation/MyMesh.as.html"/>
+				<node icon="actionScriptIcon" label="MyModel.as" url="source/me/ylab/graphic/foundation/MyModel.as.html"/>
+				<node icon="actionScriptIcon" label="MyProgram.as" url="source/me/ylab/graphic/foundation/MyProgram.as.html"/>
+				<node icon="actionScriptIcon" label="MyTexture.as" url="source/me/ylab/graphic/foundation/MyTexture.as.html"/>
+				<node icon="actionScriptIcon" label="MyTransparentModel.as" url="source/me/ylab/graphic/foundation/MyTransparentModel.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexBuffer.as" url="source/me/ylab/graphic/foundation/MyVertexBuffer.as.html"/>
+				<node icon="actionScriptIcon" label="WorldModel.as" url="source/me/ylab/graphic/foundation/WorldModel.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.types" expanded="true">
+				<node icon="actionScriptIcon" label="ColoredVertex3.as" url="source/me/ylab/graphic/types/ColoredVertex3.as.html"/>
+				<node icon="actionScriptIcon" label="GraphicMatrix4x4.as" url="source/me/ylab/graphic/types/GraphicMatrix4x4.as.html"/>
+				<node icon="actionScriptIcon" label="GraphicVertex3.as" url="source/me/ylab/graphic/types/GraphicVertex3.as.html"/>
+				<node icon="actionScriptIcon" label="TexturedVertex3.as" url="source/me/ylab/graphic/types/TexturedVertex3.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.types.indices" expanded="true">
+				<node icon="actionScriptIcon" label="MyVertexIndicesDrawBatch.as" url="source/me/ylab/graphic/types/indices/MyVertexIndicesDrawBatch.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesMesh.as" url="source/me/ylab/graphic/types/indices/MyVertexIndicesMesh.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesMeshDraw.as" url="source/me/ylab/graphic/types/indices/MyVertexIndicesMeshDraw.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesTriangle.as" url="source/me/ylab/graphic/types/indices/MyVertexIndicesTriangle.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.types.indices.colored" expanded="true">
+				<node icon="actionScriptIcon" label="MyColoredVertexIndicesDrawBatch.as" url="source/me/ylab/graphic/types/indices/colored/MyColoredVertexIndicesDrawBatch.as.html"/>
+				<node icon="actionScriptIcon" label="MyColoredVertexIndicesMesh.as" url="source/me/ylab/graphic/types/indices/colored/MyColoredVertexIndicesMesh.as.html"/>
+				<node icon="actionScriptIcon" label="MyColoredVertexIndicesMeshDraw.as" url="source/me/ylab/graphic/types/indices/colored/MyColoredVertexIndicesMeshDraw.as.html"/>
+				<node icon="actionScriptIcon" label="MyColoredVertexIndicesTriangle.as" url="source/me/ylab/graphic/types/indices/colored/MyColoredVertexIndicesTriangle.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.types.indices.cubetexture" expanded="true">
+				<node icon="actionScriptIcon" label="MyVertexIndicesWithCubeTextureDrawBatch.as" url="source/me/ylab/graphic/types/indices/cubetexture/MyVertexIndicesWithCubeTextureDrawBatch.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesWithCubeTextureMesh.as" url="source/me/ylab/graphic/types/indices/cubetexture/MyVertexIndicesWithCubeTextureMesh.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesWithCubeTextureMeshDraw.as" url="source/me/ylab/graphic/types/indices/cubetexture/MyVertexIndicesWithCubeTextureMeshDraw.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertexIndicesWithCubeTextureTriangle.as" url="source/me/ylab/graphic/types/indices/cubetexture/MyVertexIndicesWithCubeTextureTriangle.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.graphic.types.indices.textured" expanded="true">
+				<node icon="actionScriptIcon" label="MyTexturedVertexIndicesDrawBatch.as" url="source/me/ylab/graphic/types/indices/textured/MyTexturedVertexIndicesDrawBatch.as.html"/>
+				<node icon="actionScriptIcon" label="MyTexturedVertexIndicesMesh.as" url="source/me/ylab/graphic/types/indices/textured/MyTexturedVertexIndicesMesh.as.html"/>
+				<node icon="actionScriptIcon" label="MyTexturedVertexIndicesMeshDraw.as" url="source/me/ylab/graphic/types/indices/textured/MyTexturedVertexIndicesMeshDraw.as.html"/>
+				<node icon="actionScriptIcon" label="MyTexturedVertexIndicesTriangle.as" url="source/me/ylab/graphic/types/indices/textured/MyTexturedVertexIndicesTriangle.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.rc" expanded="true">
+				<node icon="actionScriptIcon" label="Cube.as" url="source/me/ylab/rc/Cube.as.html"/>
+				<node icon="actionScriptIcon" label="CubeApplication.as" url="source/me/ylab/rc/CubeApplication.as.html"/>
+				<node icon="actionScriptIcon" label="CubeGroup.as" url="source/me/ylab/rc/CubeGroup.as.html"/>
+				<node icon="actionScriptIcon" label="CubeLogic.as" url="source/me/ylab/rc/CubeLogic.as.html"/>
+				<node icon="mxmlAppIcon" selected="true" label="RubiksCube.as" url="source/me/ylab/rc/RubiksCube.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.rc.animations" expanded="true">
+				<node icon="actionScriptIcon" label="CameraMoveEyeAnimation.as" url="source/me/ylab/rc/animations/CameraMoveEyeAnimation.as.html"/>
+				<node icon="actionScriptIcon" label="CubeAutoOperateAnimation.as" url="source/me/ylab/rc/animations/CubeAutoOperateAnimation.as.html"/>
+				<node icon="actionScriptIcon" label="CubeAutoRotateAnimation.as" url="source/me/ylab/rc/animations/CubeAutoRotateAnimation.as.html"/>
+				<node icon="actionScriptIcon" label="CubeOperateAnimation.as" url="source/me/ylab/rc/animations/CubeOperateAnimation.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.rc.scenes" expanded="true">
+				<node icon="actionScriptIcon" label="CubeBaseScene.as" url="source/me/ylab/rc/scenes/CubeBaseScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeCustomScene.as" url="source/me/ylab/rc/scenes/CubeCustomScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeFinishMenuScene.as" url="source/me/ylab/rc/scenes/CubeFinishMenuScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeGameScene.as" url="source/me/ylab/rc/scenes/CubeGameScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeHelpMenuScene.as" url="source/me/ylab/rc/scenes/CubeHelpMenuScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeMainMenuScene.as" url="source/me/ylab/rc/scenes/CubeMainMenuScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubePauseMenuScene.as" url="source/me/ylab/rc/scenes/CubePauseMenuScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubePrepareMenuScene.as" url="source/me/ylab/rc/scenes/CubePrepareMenuScene.as.html"/>
+				<node icon="actionScriptIcon" label="CubeViewScene.as" url="source/me/ylab/rc/scenes/CubeViewScene.as.html"/>
+			</node>
+			<node icon="packageIcon" label="me.ylab.tools" expanded="true">
+				<node icon="actionScriptIcon" label="CanvasBitmapData.as" url="source/me/ylab/tools/CanvasBitmapData.as.html"/>
+				<node icon="actionScriptIcon" label="IMyKeyEventListener.as" url="source/me/ylab/tools/IMyKeyEventListener.as.html"/>
+				<node icon="actionScriptIcon" label="IMyMouseEventListener.as" url="source/me/ylab/tools/IMyMouseEventListener.as.html"/>
+				<node icon="actionScriptIcon" label="LineAlgorithm.as" url="source/me/ylab/tools/LineAlgorithm.as.html"/>
+				<node icon="actionScriptIcon" label="MyCoordinateSystem3.as" url="source/me/ylab/tools/MyCoordinateSystem3.as.html"/>
+				<node icon="actionScriptIcon" label="MyKeyEventCode.as" url="source/me/ylab/tools/MyKeyEventCode.as.html"/>
+				<node icon="actionScriptIcon" label="MyLine2.as" url="source/me/ylab/tools/MyLine2.as.html"/>
+				<node icon="actionScriptIcon" label="MyLine3.as" url="source/me/ylab/tools/MyLine3.as.html"/>
+				<node icon="actionScriptIcon" label="MyLineSegment2.as" url="source/me/ylab/tools/MyLineSegment2.as.html"/>
+				<node icon="actionScriptIcon" label="MyMatrix3x3.as" url="source/me/ylab/tools/MyMatrix3x3.as.html"/>
+				<node icon="actionScriptIcon" label="MyMatrix4x4.as" url="source/me/ylab/tools/MyMatrix4x4.as.html"/>
+				<node icon="actionScriptIcon" label="MyPlane.as" url="source/me/ylab/tools/MyPlane.as.html"/>
+				<node icon="actionScriptIcon" label="MyRay2.as" url="source/me/ylab/tools/MyRay2.as.html"/>
+				<node icon="actionScriptIcon" label="MyRay3.as" url="source/me/ylab/tools/MyRay3.as.html"/>
+				<node icon="actionScriptIcon" label="MySize2.as" url="source/me/ylab/tools/MySize2.as.html"/>
+				<node icon="actionScriptIcon" label="MyTriangle.as" url="source/me/ylab/tools/MyTriangle.as.html"/>
+				<node icon="actionScriptIcon" label="MyVector2.as" url="source/me/ylab/tools/MyVector2.as.html"/>
+				<node icon="actionScriptIcon" label="MyVector3.as" url="source/me/ylab/tools/MyVector3.as.html"/>
+				<node icon="actionScriptIcon" label="MyVector4.as" url="source/me/ylab/tools/MyVector4.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertex2.as" url="source/me/ylab/tools/MyVertex2.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertex3.as" url="source/me/ylab/tools/MyVertex3.as.html"/>
+				<node icon="actionScriptIcon" label="MyVertex4.as" url="source/me/ylab/tools/MyVertex4.as.html"/>
+			</node>
+		</node>
+	</nodes>
+	<zipfile label="下载源代码（ZIP，107 KB）" url="rubiks_cube.zip">
+	</zipfile>
+	<sdklink label="下载 Flex SDK" url="http://www.adobe.com/go/flex451_sdk_download_zh_CN">
+	</sdklink>
+</index>
