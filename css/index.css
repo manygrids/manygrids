@@ -1,0 +1,64 @@
+/**/
+html, body, p, div, input
+{
+  padding: 0;
+  margin: 0;
+  font: 16px / 1.5 "Pingfang SC",STHeiti,"Lantinghei SC","Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",SimSun,sans-serif;
+}
+
+@media screen and (max-width: 640px)
+{
+  html, body, p, div, input
+  {
+    font-size: 24px;
+  }
+}
+
+p
+{
+  text-align: center;
+  margin: 2em 0 0;
+}
+
+#PrevMsg
+{
+  border: 1px solid #ddd;
+  padding: 1em;
+  margin: 1em;
+}
+
+#LeaveMsg
+{
+  margin: 2em auto;
+  padding: 0.5em;
+  display: block;
+  width: calc(100% - 2em);
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.5s;
+  border: 1px solid #ccc;
+}
+
+#LeaveMsg:focus
+{
+  box-shadow: inset 0px 0px 4px 3px rgba(221, 221, 221, 0.5);
+}
+
+#SendMsg
+{
+  display: block;
+  width: calc(100% - 2em);
+  box-sizing: border-box;
+  border: none;
+  padding: 0.5em;
+  background-color: #cfc;
+  color: #555;
+  margin: 0.5em auto;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+#SendMsg:active
+{
+  background-color: #bfb;
+}
