@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width">
+	<meta charset="UTF-8">
+	<title>填填</title>
+	<style type="text/css">
+		input { width: 1em; border: none; outline: none; padding: 0; font-size: 10vw; text-align: center; }
+		table { width: 100%; border-collapse: collapse; }
+		td { background-color: #ccc; border: 1px solid #ccc; text-align: center; font-size: 10vw; width: 11vw; height: 11vw; }
+		.code th { padding: 1em 0 0; }
+		.code td { width: auto; font-size: 6vw; color: #333; }
+		td.ic { background-color: #fff; }
+		td.ie { background-color: #ffc; }
+		td.na { box-shadow: inset 0 0 8px 2px #f44; }
+		td.nb { box-shadow: inset 0 0 8px 2px #f4f; }
+		td.nc { box-shadow: inset 0 0 8px 2px #8b4; }
+		td.nd { box-shadow: inset 0 0 8px 2px #44f; }
+		td.ne { box-shadow: inset 0 0 8px 2px #488; }
+		td.nf { box-shadow: inset 0 0 8px 2px #4bb; }
+		td.ng { box-shadow: inset 0 0 8px 2px #844; }
+		td.nh { box-shadow: inset 0 0 8px 2px #48b; }
+		td.ni { box-shadow: inset 0 0 8px 2px #b84; }
+		td.nj { box-shadow: inset 0 0 8px 2px #bb8; }
+	</style>
+</head>
+<body>
+	<table class="puzzle">
+		<tbody>
+			<tr><td></td><td></td><td> </td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td class="na"> </td><td class="nb"> </td><td> </td><td>落</td><td>独</td><td></td></tr>
+			<tr><td></td><td></td><td>竖</td><td></td><td></td><td></td><td class="nc"> </td><td></td></tr>
+			<tr><td> </td><td> </td><td class="nd"> </td><td>两</td><td class="ne"> </td><td> </td><td> </td><td>主</td></tr>
+			<tr><td></td><td></td><td class="nf"> </td><td></td><td>亲</td><td></td><td class="ng"> </td><td></td></tr>
+			<tr><td></td><td></td><td> </td><td class="nh"> </td><td> </td><td class="ni"> </td><td></td><td></td></tr>
+			<tr><td></td><td></td><td>离</td><td></td><td> </td><td></td><td></td><td></td></tr>
+			<tr><td class="nj"> </td><td> </td><td> </td><td>色</td><td></td><td></td><td></td><td></td></tr>
+	</tbody>
+	</table>
+	<table class="code">
+		<tr><th colspan="8">支付宝口令红包</th></tr>
+		<tr>
+			<td class="ne"> </td>
+			<td class="nd"> </td>
+			<td class="ng"> </td>
+			<td class="na"> </td>
+			<td class="nh"> </td>
+			<td class="na"> </td>
+			<td class="nb"> </td>
+			<td class="nh"> </td>
+		</tr>
+	</table>
+	<script>
+		let tdClasses = ['ic', 'ie'];
+		
+		let input = document.createElement('input');
+
+		function confirmEnter(e, k) {
+			input.removeEventListener('blur', confirmEnter);
+
+			let t = e.target;
+			if (null == t.parentNode) return;
+			console.log('confirmEnter ' + k);
+			console.log(t.parentNode);
+			let p = t.parentNode;
+			p.removeChild(t);
+			p.textContent = t.value.charAt(0);
+		}
+
+		input.addEventListener('keyup', e => {
+			if (13 == e.keyCode) {
+				confirmEnter.call(this, e, 'k');
+			}
+		});
+
+		function startEdit(e) {
+			if (input.parentNode) return;
+			console.log('startEdit');
+			let td = e.target;
+			if (new RegExp(tdClasses[1]).test(td.className)) {
+				input.value = td.textContent.replace(/\s/g, '');
+				td.innerHTML = '';
+				td.appendChild(input);
+				input.select();
+
+				input.addEventListener('blur', confirmEnter);
+			}
+		}
+
+		let tds = document.querySelectorAll('.puzzle td');
+		
+		tds.forEach(td => {
+			(td.textContent.length > 0) && (td.className += ' ' + tdClasses[+(' ' == td.textContent)]);
+
+			td.addEventListener('click', startEdit);
+			td.addEventListener('touchend', startEdit);
+
+			if (/n.?/.test(td.className)) {
+				td.addEventListener('DOMNodeRemoved', e => {
+					if (input == e.target) {
+						document.querySelectorAll('.code td.' + e.relatedNode.className.match(/n.?/))
+						.forEach(td => {
+							td.textContent = input.value.charAt(0);
+						});
+					}
+				});
+			}
+		});
+
+		document.querySelectorAll('.code td').forEach(td => { td.className += ' ie'; });
+		
+	</script>
+</body>
+</html>
