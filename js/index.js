@@ -4,7 +4,7 @@
     var msg = document.querySelector('#LeaveMsg').value;
     if (msg.length > 0) {
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '//blog.kvugt.com/leave', true);
+      xhr.open('POST', '//api.kvugt.com/gcai/leave', true);
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xhr.send('message=' + encodeURIComponent(msg));
       document.querySelector('#LeaveMsg').value = '';
@@ -13,7 +13,7 @@
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '//blog.kvugt.com/msg', true);
+  xhr.open('GET', '//api.kvugt.com/gcai/msg', true);
 
   xhr.onreadystatechange = function() {
     if (4 == xhr.readyState && 200 == xhr.status) {
