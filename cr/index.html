@@ -4,12 +4,197 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
 	<title></title>
+	<style type="text/css">
+		input
+		{
+			padding: 0;
+			margin: 0;
+		}
+
+		.range-with-bg
+		{
+			position: relative;
+			display: inline-block;
+		}
+		.range-with-bg input
+		{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		.range-with-bg input
+		{
+			-webkit-appearance: none;
+			background: transparent;
+		}
+
+	</style>
 </head>
 <body>
 	<canvas id="DaCanvas" width="100" height="100"></canvas>
-	<div><label>原始</label><input id="ori" type="color" /></div>
-	<div><label>替换</label><input id="rep" type="color" /></div>
+	<div>
+		<h3>原始</h3>
+		<!-- <input id="ori" type="color" /> -->
+		<div>
+			<div class="range-with-bg hue">
+				<input id="OriH" type="range" min="0" max="359" />
+				<canvas id="OriHCanvas" width="360" height="20"></canvas>
+			</div>
+		</div>
+		<div style="display: none;">
+			<div class="range-with-bg saturation">
+				<input id="OriS" type="range" min="0" max="99" />
+				<canvas id="OriSCanvas" width="100" height="20"></canvas>
+			</div>
+		</div>
+		<div style="display: none;">
+			<div class="range-with-bg value">
+				<input id="OriV" type="range" min="0" max="99" />
+				<canvas id="OriVCanvas" width="100" height="20"></canvas>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h3>替换</h3>
+		<!-- <input id="rep" type="color" /> -->
+		<div>
+			<div class="range-with-bg hue">
+				<input id="RepH" type="range" min="0" max="359" />
+				<canvas id="RepHCanvas" width="360" height="20"></canvas>
+			</div>
+		</div>
+	</div>
 	<script>
+
+		function HSV2RGB(h, s, v) {
+			let c = v * s;
+			let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+			let m = v - c;
+
+			let tRGB = { r: 0, g: 0, b: 0 };
+			if (h >= 300) {
+				tRGB = { r: c, g: 0, b: x };
+			} else if (h >= 240) {
+				tRGB = { r: x, g: 0, b: c };
+			} else if (h >= 180) {
+				tRGB = { r: 0, g: x, b: c };
+			} else if (h >= 120) {
+				tRGB = { r: 0, g: c, b: x };
+			} else if (h >= 60) {
+				tRGB = { r: x, g: c, b: 0 };
+			} else if (h >= 0) {
+				tRGB = { r: c, g: x, b: 0 };
+			}
+
+			return {
+				r: Math.floor((tRGB.r + m) * 255),
+				g: Math.floor((tRGB.g + m) * 255),
+				b: Math.floor((tRGB.b + m) * 255)
+			};
+		}
+
+		function RGB2HSV(r, g, b) {
+			let tRGB = { r: r / 255, g: g / 255, b: b / 255 };
+			let cMax = Math.max(tRGB.r, tRGB.g, tRGB.b);
+			let cMin = Math.min(tRGB.r, tRGB.g, tRGB.b);
+			let delta = cMax - cMin;
+
+			let h = 0;
+			if (cMax == tRGB.r) {
+				h = 60 * (((tRGB.g - tRGB.b) / delta) % 6);
+			}
+			if (cMax == tRGB.g) {
+				h = 60 * (((tRGB.b - tRGB.r) / delta) + 2);
+			}
+			if (cMax == tRGB.r) {
+				h = 60 * (((tRGB.r - tRGB.g) / delta) + 4);
+			}
+
+			let s = 0;
+			if (0 != cMax) {
+				s = delta / cMax;
+			}
+
+			return { h: h, s: s, v: cMax };
+		}
+
+		let OriHCanvas = document.querySelector('#OriHCanvas');
+		let OriHCanvasCtx = OriHCanvas.getContext('2d');
+		let hImgData = OriHCanvasCtx.getImageData(0, 0, 360, 20);
+		
+		for (let x = 0; x < 360; x++) {
+			for (let y = 0; y < 20; y++) {
+				let rgb = HSV2RGB(x, 1, 1);
+				hImgData.data[y * 360 * 4 + 4 * x + 0] = rgb.r;
+				hImgData.data[y * 360 * 4 + 4 * x + 1] = rgb.g;
+				hImgData.data[y * 360 * 4 + 4 * x + 2] = rgb.b;
+				hImgData.data[y * 360 * 4 + 4 * x + 3] = 255;
+			}
+		}
+
+		OriHCanvasCtx.putImageData(hImgData, 0, 0);
+
+		let RepHCanvas = document.querySelector('#RepHCanvas');
+		let RepHCanvasCtx = RepHCanvas.getContext('2d');
+		RepHCanvasCtx.putImageData(hImgData, 0, 0);
+
+
+		let OriH = document.querySelector('#OriH');
+		let OriS = document.querySelector('#OriS');
+		let OriV = document.querySelector('#OriV');
+
+		function oriSatChange(h) {
+			let OriVCanvas = document.querySelector('#OriVCanvas');
+			let OriVCanvasCtx = OriVCanvas.getContext('2d');
+			let vImgData = OriVCanvasCtx.getImageData(0, 0, 100, 20);
+			
+			for (let x = 0; x < 100; x++) {
+				for (let y = 0; y < 20; y++) {
+					let rgb = HSV2RGB(h, OriS.value / 100, x / 100);
+					vImgData.data[y * 100 * 4 + 4 * x + 0] = rgb.r;
+					vImgData.data[y * 100 * 4 + 4 * x + 1] = rgb.g;
+					vImgData.data[y * 100 * 4 + 4 * x + 2] = rgb.b;
+					vImgData.data[y * 100 * 4 + 4 * x + 3] = 255;
+				}
+			}
+
+			OriVCanvasCtx.putImageData(vImgData, 0, 0);
+		}
+
+		function oriValChange(h) {
+			let OriSCanvas = document.querySelector('#OriSCanvas');
+			let OriSCanvasCtx = OriSCanvas.getContext('2d');
+			let sImgData = OriSCanvasCtx.getImageData(0, 0, 100, 20);
+			
+			for (let x = 0; x < 100; x++) {
+				for (let y = 0; y < 20; y++) {
+					let rgb = HSV2RGB(h, x / 100, OriV.value / 100);
+					sImgData.data[y * 100 * 4 + 4 * x + 0] = rgb.r;
+					sImgData.data[y * 100 * 4 + 4 * x + 1] = rgb.g;
+					sImgData.data[y * 100 * 4 + 4 * x + 2] = rgb.b;
+					sImgData.data[y * 100 * 4 + 4 * x + 3] = 255;
+				}
+			}
+
+			OriSCanvasCtx.putImageData(sImgData, 0, 0);
+		}
+
+		function oriHueChange(e) {
+			oriSatChange(e.target.value);
+			oriValChange(e.target.value);
+			updateColorRange();
+		}
+
+		OriH.onmousemove = oriHueChange;
+		OriS.onchange = () => { oriSatChange(OriH.value); updateColorRange(); };
+		OriV.onchange = () => { oriValChange(OriH.value); updateColorRange(); };
+
+
+
+
 
 
 		let frame = {
@@ -22,12 +207,41 @@
 			y: 0,
 		};
 
-		let delay = 50;
+		let delay = 100;
 		let nextKey = delay;
 
 
-		let oriCol = document.querySelector('#ori');
-		let repCol = document.querySelector('#rep');
+		// let oriCol = document.querySelector('#ori');
+		// let repCol = document.querySelector('#rep');
+
+		let colorRange = [];
+
+		let oriColHSV = null;
+
+
+		function addDistinctColor(rgb) {
+			for (let i = colorRange.length - 1; i >=0; i--) {
+				if (colorRange[i].r == rgb.r
+					&& colorRange[i].g == rgb.g
+					&& colorRange[i].b == rgb.b) {
+					return;
+				}
+			}
+			colorRange.push(rgb);
+		}
+
+		function updateColorRange() {
+			colorRange = [];
+
+			for (let s = 30 ; s < 70; s++) {
+				for (let v = 30 ; v < 70; v++) {
+					let rgb = HSV2RGB(OriH.value, s / 100, v / 100);
+					addDistinctColor(rgb);
+				}
+			}
+
+			oriColHSV = { h: OriH.value, s: OriS.value / 100, v: OriV.value / 100 };
+		}
 		
 
 		let backBuffer = document.createElement('canvas');
@@ -57,27 +271,40 @@
 				bbCtx.drawImage(img, curFrame.x, curFrame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
 
 				let imgData = bbCtx.getImageData(0, 0, 100, 100);
-				let ori = oriCol.value;
-				let oriR = parseInt(ori.slice(1, 3), 16);
-				let oriG = parseInt(ori.slice(3, 5), 16);
-				let oriB = parseInt(ori.slice(5, 7), 16);
-				
-				let rep = repCol.value;
-				let repR = parseInt(rep.slice(1, 3), 16);
-				let repG = parseInt(rep.slice(3, 5), 16);
-				let repB = parseInt(rep.slice(5, 7), 16);
 
 				for (var i = 0; i < 10000; i++) {
-					// imgData.data[Math.floor(Math.random() * 100 * 100 * 4)] = 0;
 
-					if (Math.abs(oriR - imgData.data[4 * i]) < 32
-							&& Math.abs(oriG - imgData.data[4 * i + 1]) < 32
-							&& Math.abs(oriB - imgData.data[4 * i] + 2) < 32) {
+					let hsv = RGB2HSV(imgData.data[4 * i], imgData.data[4 * i + 1], imgData.data[4 * i + 2]);
 
-						imgData.data[4 * i] = repR;
-						imgData.data[4 * i + 1] = repG;
-						imgData.data[4 * i + 2] = repB;
+					if (oriColHSV && Math.abs(oriColHSV.h - hsv.h) < 30) {
+						// && colorRange[i].g == imgData.data[4 * i + 1]
+						// && colorRange[i].b == imgData.data[4 * i + 2]) {
+						// console.log(colorRange[i].r + ' ' + imgData.data[4 * i]);
+
+						let newRGB = HSV2RGB(RepH.value, hsv.s, hsv.v);
+						imgData.data[4 * i] = newRGB.r;
+						imgData.data[4 * i + 1] = newRGB.g;
+						imgData.data[4 * i + 2] = newRGB.b;
+
 					}
+
+					// for (let i = colorRange.length - 1; i >=0; i--) {
+						
+						// if (colorRange[i].r == imgData.data[4 * i]
+						// 	&& colorRange[i].g == imgData.data[4 * i + 1]
+						// 	&& colorRange[i].b == imgData.data[4 * i + 2]) {
+						// 	console.log(colorRange[i].r + ' ' + imgData.data[4 * i]);
+
+						// 	let hsv = RGB2HSV(imgData.data[4 * i], imgData.data[4 * i + 1], imgData.data[4 * i + 2]);
+						// 	let newRGB = HSV2RGB(RepH.value, hsv.s, hsv.v);
+						// 	imgData.data[4 * i] = newRGB.r;
+						// 	imgData.data[4 * i + 1] = newRGB.g;
+						// 	imgData.data[4 * i + 2] = newRGB.b;
+
+						// 	break;
+						// }
+					// }
+
 				}
 				bbCtx.putImageData(imgData, 0, 0);
 
