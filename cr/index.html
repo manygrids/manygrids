@@ -262,7 +262,7 @@
 					if (curFrame.x > img.width) {
 						curFrame.x = 0;
 						curFrame.y += frame.height;
-						if (curFrame.y > img.height) {
+						if (curFrame.y >= img.height) {
 							curFrame.y = 0;
 						}
 					}
