@@ -259,7 +259,7 @@
 					nextKey += delay;
 
 					curFrame.x += frame.width;
-					if (curFrame.x > img.width) {
+					if (curFrame.x >= img.width) {
 						curFrame.x = 0;
 						curFrame.y += frame.height;
 						if (curFrame.y >= img.height) {
