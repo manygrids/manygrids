@@ -36,6 +36,20 @@
 <body>
 	<canvas id="DaCanvas" width="100" height="100"></canvas>
 	<div>
+		<h3>上传图片</h3>
+		<div>
+			<input id="ImgUpload" type="file" />
+		</div>
+		<!-- <h3>动画</h3> -->
+		<div style="margin-top: 2em;">
+			<label><input id="IsAnimation" type="checkbox" checked="" />动画</label>
+		</div>
+		<div id="AnimationPanel" style="">
+			<h3>帧数量</h3>
+			<div>
+				<input id="FrameNumX" placeholder="列" type="number" value="9" />&nbsp;X&nbsp;<input id="FrameNumY" placeholder="行" type="number" value="8" />
+			</div>
+		</div>
 		<h3>原始</h3>
 		<!-- <input id="ori" type="color" /> -->
 		<div>
@@ -193,26 +207,7 @@
 		OriV.onchange = () => { oriValChange(OriH.value); updateColorRange(); };
 
 
-
-
-
-
-		let frame = {
-			width: 564 / 9,
-			height: 774 / 8,
-		};
-
-		let curFrame = {
-			x: 0,
-			y: 0,
-		};
-
-		let delay = 100;
-		let nextKey = delay;
-
-
-		// let oriCol = document.querySelector('#ori');
-		// let repCol = document.querySelector('#rep');
+		let isAnimate = true;
 
 		let colorRange = [];
 
@@ -245,34 +240,87 @@
 		
 
 		let backBuffer = document.createElement('canvas');
-		backBuffer.width = 100;
-		backBuffer.height = 100;
-		let bbCtx = backBuffer.getContext('2d');
+		
 
-		let img = new Image();
-		img.onload = () => {
+		let checkbox = document.querySelector('#IsAnimation');
+		let aniPanel = document.querySelector('#AnimationPanel');
+
+		checkbox.onchange = e => {
+			isAnimate = checkbox.checked;
+
+			if (checkbox.checked) {
+				aniPanel.style.display = '';
+				RefreshImage();
+			} else {
+				aniPanel.style.display = 'none';
+				RefreshImage();
+			}
+		};
+
+		let FrameNumX = document.querySelector('#FrameNumX');
+		let FrameNumY = document.querySelector('#FrameNumY');
+
+		FrameNumX.onchange = FrameNumY.onchange = e => {
+			RefreshImage();
+		};
+
+
+		function RefreshImage() {
+
+			let frame = {
+				width: img.width,
+				height: img.height,
+			};
+
+			let curFrame = {
+				x: 0,
+				y: 0,
+			};
+
+			let delay = 100;
+			let nextKey = delay;
+
+			if (isAnimate) {
+				frame = {
+					width: Math.ceil(img.width / Math.max(1, parseInt(FrameNumX.value))),
+					height: Math.ceil(img.height / Math.max(1, parseInt(FrameNumY.value))),
+				};
+			}
+
+			backBuffer.width = frame.width;
+			backBuffer.height = frame.height;
+
 			let canvas = document.querySelector('#DaCanvas');
+
+			canvas.width = frame.width;
+			canvas.height = frame.height;
+
+			let bbCtx = backBuffer.getContext('2d');
 			let ctx = canvas.getContext('2d');
 
 			function draw(t) {
 				if (t >= nextKey) {
 					nextKey += delay;
 
-					curFrame.x += frame.width;
-					if (curFrame.x >= img.width) {
-						curFrame.x = 0;
-						curFrame.y += frame.height;
-						if (curFrame.y >= img.height) {
-							curFrame.y = 0;
+					if (isAnimate) {
+						curFrame.x += frame.width;
+						if (curFrame.x >= img.width) {
+							curFrame.x = 0;
+							curFrame.y += frame.height;
+							if (curFrame.y >= img.height) {
+								curFrame.y = 0;
+							}
 						}
 					}
 				}
 
 				bbCtx.drawImage(img, curFrame.x, curFrame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
 
-				let imgData = bbCtx.getImageData(0, 0, 100, 100);
+				let imgData = bbCtx.getImageData(0, 0, frame.width, frame.height);
 
-				for (var i = 0; i < 10000; i++) {
+				let pixelCount = frame.width * frame.height;
+
+				for (var i = 0; i < pixelCount; i++) {
 
 					let hsv = RGB2HSV(imgData.data[4 * i], imgData.data[4 * i + 1], imgData.data[4 * i + 2]);
 
@@ -315,8 +363,19 @@
 
 			window.requestAnimationFrame(draw);
 
-		};
+		}
+
+		let img = new Image();
+		img.onload = RefreshImage;
 		img.src = '132545930dbc308961.jpg';
+
+		document.querySelector('#ImgUpload').onchange = e => {
+
+			img.src = window.URL.createObjectURL(e.target.files[0]);
+
+			isAnimate = false;
+
+		};
 
 	</script>	
 </body>
