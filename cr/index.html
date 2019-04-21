@@ -314,6 +314,7 @@
 					}
 				}
 
+				bbCtx.clearRect(0, 0, frame.width, frame.height);
 				bbCtx.drawImage(img, curFrame.x, curFrame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
 
 				let imgData = bbCtx.getImageData(0, 0, frame.width, frame.height);
