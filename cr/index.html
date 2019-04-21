@@ -357,6 +357,7 @@
 				}
 				bbCtx.putImageData(imgData, 0, 0);
 
+				ctx.clearRect(0, 0, frame.width, frame.height);
 				ctx.drawImage(backBuffer, 0, 0);
 				
 				window.requestAnimationFrame(draw);
